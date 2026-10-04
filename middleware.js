@@ -37,7 +37,7 @@ export function middleware(request) {
   // =========================================================
   // 3. AUTH GUARD
   // =========================================================
-  const protectedRoutes = ["/dashboard", "/profile"]; // Masukkan rute yang WAJIB login di sini
+  const protectedRoutes = ["/dashboard"]; // Masukkan rute yang WAJIB login di sini
   const isProtectedRoute = protectedRoutes.some((route) => pathname.startsWith(route));
 
   if (isProtectedRoute) {
