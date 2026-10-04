@@ -27,7 +27,20 @@ export function middleware(request) {
   // 3. AUTH GUARD
   // Dijalankan terakhir untuk memproteksi halaman tertentu
   // =========================================================
-  if (pathname.startsWith("/favorites")) {
+  /*if (pathname.startsWith("/favorites")) {
+    const token = request.cookies.get("token");
+
+    if (!token) {
+      return NextResponse.redirect(new URL("/", request.url));
+    }
+  }*/
+  // =========================================================
+  // 3. AUTH GUARD
+  // =========================================================
+  const protectedRoutes = ["/dashboard", "/profile"]; // Masukkan rute yang WAJIB login di sini
+  const isProtectedRoute = protectedRoutes.some((route) => pathname.startsWith(route));
+
+  if (isProtectedRoute) {
     const token = request.cookies.get("token");
 
     if (!token) {
