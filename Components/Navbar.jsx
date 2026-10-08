@@ -57,11 +57,6 @@ export default function Navbar() {
                 )}
               >
                 {link.label}
-                {isFavoriteLink && (
-                  <span className="rounded-full bg-primary/20 px-1.5 py-0.5 text-xs font-semibold text-primary">
-                    {favorites.length}
-                  </span>
-                )}
               </Link>
             );
           })}

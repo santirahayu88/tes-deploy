@@ -7,7 +7,7 @@ import { useUser } from "@/context/UserContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
-import { submitContactForm } from "@/app/contact/action"; // Sesuaikan path lokasi file actions Anda
+import { submitContactForm } from "@/app/contact/actions"; // Sesuaikan path lokasi file actions Anda
 
 const contactInfo = [
   { icon: Mail, label: "Email", value: "hello@mywebsite.com" },

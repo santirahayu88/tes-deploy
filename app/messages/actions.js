@@ -2,20 +2,18 @@
 
 import { messages } from "@/lib/db";
 import { revalidatePath } from "next/cache";
+import { createClient } from "@/lib/supabase/server";
 
-// === [TAMBAHAN BARU: Server Action untuk Hapus Pesan] ===
 export async function deleteMessageAction(formData) {
-  const id = formData.get("id");
+  const supabase = await createClient();
+  const id = Number(formData.get("id"));
 
-  // Cari posisi/index pesan berdasarkan id
-  const index = messages.findIndex((msg) => String(msg.id) === String(id));
+  const { error } = await supabase.from("messages").delete().eq("id", id);
 
-  if (index !== -1) {
-    // Hapus pesan dari array
-    messages.splice(index, 1);
-
-    // Revalidate path agar cache halaman dikosongkan & tampilan otomatis ter-update
-    revalidatePath("/messages");
+  if (error) {
+    return { success: false, error: error.message };
   }
+
+  revalidatePath("/messages");
+  return { success: true };
 }
-// ========================================================
