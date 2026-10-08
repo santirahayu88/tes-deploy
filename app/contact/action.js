@@ -1,4 +1,7 @@
+"use server";
+
 import { createClient } from "@/lib/supabase/server";   // ganti import
+import { server } from "shadcn/mcp";
 
 export async function submitContactForm(formData) {
   const supabase = await createClient();                // tambah baris ini

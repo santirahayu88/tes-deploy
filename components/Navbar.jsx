@@ -2,11 +2,11 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useUser } from "@/context/UserContext";
-import { useFavorite } from "@/context/FavoriteContext";
 
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
+import { useAuth } from "@/context/AuthContext"; // ← baru
+import { useFavorite } from "@/context/FavoriteContext";
 
 const links = [
   { href: "/", label: "Home" },
@@ -19,8 +19,14 @@ const links = [
 
 export default function Navbar() {
   const pathname = usePathname();
-  const { name, submitted } = useUser();
+  const { isLoggedIn } = useAuth(); // ← baru
   const { favorites } = useFavorite();
+
+    // Menu Favorite baru muncul setelah ada user yang difavoritkan
+  const navLinks =
+    favorites.length > 0
+      ? [...links, { href: "/favorites", label: `Favorite (${favorites.length})` }]
+      : links;
 
   return (
     <header className="sticky top-4 z-50 mx-auto w-full max-w-4xl px-4">
@@ -39,7 +45,7 @@ export default function Navbar() {
                 ? pathname === "/"
                 : pathname?.startsWith(link.href);
 
-            const isFavoriteLink = link.href === "/favorites";
+            //const isFavoriteLink = link.href === "/favorites";
 
             return (
               <Link
@@ -61,14 +67,27 @@ export default function Navbar() {
           })}
         </div>
 
-        {submitted && <span>Hi, {name} 👋</span>}
-
-        <Link
-          href="/contact"
-          className={cn(buttonVariants({ size: "sm" }), "rounded-full")}
-        >
-          Get in touch
-        </Link>
+        {/* ← tombol "Get in touch" diganti dengan Login / Logout */}
+        {isLoggedIn ? (
+          <form action="/auth/signout" method="post">
+            <button
+              type="submit"
+              className={cn(
+                buttonVariants({ size: "sm", variant: "outline" }),
+                "rounded-full"
+              )}
+            >
+              Logout
+            </button>
+          </form>
+        ) : (
+          <Link
+            href="/login"
+            className={cn(buttonVariants({ size: "sm" }), "rounded-full")}
+          >
+            Login
+          </Link>
+        )}
       </nav>
     </header>
   );

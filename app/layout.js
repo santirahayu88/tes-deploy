@@ -1,52 +1,26 @@
+import { AuthProvider } from "@/context/AuthContext";
+import { FavoriteProvider } from "@/context/FavoriteContext";
+import { createClient } from "@/lib/supabase/server";
+import { Inter as FontSans } from "next/font/google";
 import "./globals.css";
 
-import localFont from "next/font/local";
-
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import { UserProvider } from "@/context/UserContext";
-import { FavoriteProvider } from "@/context/FavoriteContext";
-
-const fontSans = localFont({
-  src: [
-    {
-      path: "./fonts/PlusJakartaSans-Variable.woff2",
-      style: "normal",
-    },
-    {
-      path: "./fonts/PlusJakartaSans-Italic-Variable.woff2",
-      style: "italic",
-    },
-  ],
+const fontSans = FontSans({
+  subsets: ["latin"],
   variable: "--font-sans",
-  display: "swap",
 });
 
-export const metadata = {
-  title: "MyWebsite — Build something meaningful",
-  description:
-    "We help individuals and businesses build modern, simple, and useful digital experiences.",
-};
+export default async function RootLayout({ children }) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
 
-export default function RootLayout({ children }) {
   return (
-    <html
-      lang="en"
-      className={`dark ${fontSans.variable}`}
-      data-scroll-behavior="smooth"
-    >
-      <body className="flex min-h-screen flex-col bg-background text-foreground antialiased">
-        <FavoriteProvider>
-        <UserProvider>
-        <Navbar />
-
-        <main className="flex-1">
-          {children}
-        </main>
-
-        <Footer />
-        </UserProvider>
-        </FavoriteProvider>;
+    <html lang="en" className={`dark ${fontSans.variable}`}>
+      <body className="...">
+        <AuthProvider user={user ? { id: user.id, email: user.email } : null}>
+          <FavoriteProvider>
+            {/* Navbar, main, Footer tetap */}
+          </FavoriteProvider>
+        </AuthProvider>
       </body>
     </html>
   );
